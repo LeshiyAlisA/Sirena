@@ -1,10 +1,11 @@
 import java.io.*;
 import java.net.*;
 
-public class SE100Socket extends Thread{
+public class SE100Socket extends Thread implements Protokol{
 	private Socket socket;
 	private BufferedInputStream in;
 	private OutputStream out;
+	private AnswerPacket bi;
 	
 	public SE100Socket(Socket s){
 		System.out.println("connected..."+s.getInetAddress());
@@ -24,6 +25,7 @@ public class SE100Socket extends Thread{
 	
 	public void run(){
 		int byteValue;
+		bi = new AnswerPacket();
 		try {
 	         while (true) {
 	        	 boolean eof = false;
@@ -40,8 +42,11 @@ public class SE100Socket extends Thread{
 		        		 System.out.println("!!!!!!!!!!!!!!!!!!!3");
 		        		 b=4;
 		        		 out.write(b);
+		        		 SE100 rp = new SE100();
+		        		 rp.receivePacket(this.bi);
+		        		 
 		        	 }; 
-	        		 System.out.println(byteValue+',');
+	        		 //System.out.println(byteValue+',');
 	        		 if (byteValue == -1)
 	        			 eof = true;
 	        	 }       	 
